@@ -23,7 +23,6 @@
    - 创建两个类place（点）和road（边），用数组把所有place依次连接起来，每个place后面接上相连接的road
    - place中包括在数组中的序号index，x,y坐标（向右为x的正方向，向下为y的正方向）（经度lng=x * lng_offset+lng_base,纬度lat=y * latoffset+lat_base）（实际上x,y坐标可以根据index计算出来x=index%X(边长);y=(index-x)/X(边长)，所以可以不用保存），连接road的数量，是否显示等
    - road中包含了place在数组中的序号index、路长、通行时间等
-
 2. 地图显示，输入一个坐标，显示周围相邻的100个点和相联的边
 - 将输入的点作为起始点，使用广度优先算法找出周围的100个点，显示出来，同时显示出遍历时经过的边
 

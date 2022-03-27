@@ -1,9 +1,10 @@
-function button() {
+//按钮控件，用于执行一定的功能
+function create_map(x_offset,y_offset) {
     this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
-    this.defaultOffset = new BMapGL.Size(20, 20);
+    this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
 }
-button.prototype = new BMapGL.Control();
-button.prototype.initialize = function(map){
+create_map.prototype = new BMapGL.Control();
+create_map.prototype.initialize = function(map){
     var div = document.createElement('div');
      //添加文字标识
     div.appendChild(document.createTextNode('测试图的生成'));
@@ -16,7 +17,7 @@ button.prototype.initialize = function(map){
     // 设置相关事件函数
     div.onclick = function()
     {
-        let N=11451;
+        let N=10000;
         init_Places();
         build_graph(N);
         let i;
@@ -24,12 +25,14 @@ button.prototype.initialize = function(map){
         for(i=0;i<Place_list.length;i++)
         {
             if(Place_list[i].in_use==true)
-                {
-                    console.log(Place_list[i].index);
-                    flag++;
-                }
+            {
+                 console.log("this is the length of road_list: "+Place_list[i].road_list.length+" its point is:"+Place_list[i].index);
+                 flag++;
+            }
             else
-                console.log(i+"this index is not in_use");
+            {   
+                console.log("this index is not in_use:"+i);
+            }
         }
         console.log("totoal in_use point:"+flag);
     }
@@ -38,5 +41,21 @@ button.prototype.initialize = function(map){
    // 将DOM元素返回
     return div;
 };
-var mybutton = new button();
-map.addControl(mybutton);
+var create_graph = new create_map(20,20);
+map.addControl(create_graph);
+
+//搜索函数
+function search()
+{
+    var x=document.getElementById("x");
+    var y=document.getElementById("y");
+    window.alert("x坐标是:"+x.value+" y坐标是:"+y.value)
+}
+
+
+
+
+
+
+
+

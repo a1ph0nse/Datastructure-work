@@ -16,9 +16,12 @@ function Place(idx,road_num,use,lng,lat)
     this.road_list=[];//路的列表
     this.in_use=use;//是否使用该点,布尔值表示
     this.point=new BMapGL.Point(lng,lat);//point
-    this.marker=new BMapGL.Marker(point);//marker
+    this.marker=new BMapGL.Marker(this.point);//marker
     this.add_road=function(road)//加路
     {
+        //如果一起加路的话就直接卡死了
+        //road.line=new BMapGL.Polyline([this.point,Place_list[road.index].point],{strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});
+        //map.addOverlay(road.line);
         this.road_list.push(road);
         this.num++;   
     };
@@ -43,10 +46,8 @@ function Place(idx,road_num,use,lng,lat)
     //连出一条路,路的样式可以调整一下
     this.show_road=function(road_index)
     {
-        map.addoverlay(new BMapGL.Polyline([this.point,Place_list[road_index].point],{strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5}));
+        this.line.show();
     }
-
-
 }
 
 //路的类
@@ -55,6 +56,7 @@ function Road(idx)
     this.index=idx;//地点编号
     this.length;//路长，从后端获取
     this.time;//通行时间，从后端获取
+    this.line;//路的连线
     this.get_length=function(){}//获取路长
     this.get_time=function(){}//获取通行时间
 }
@@ -120,6 +122,7 @@ function build_graph(N)
     //此处考虑使用一个变量指向当前选中的点的index
     let key=randomcreater(0,12100);
     Place_list[key].in_use=true;
+    map.addOverlay(Place_list[key].marker)
     let next_key;//用于找到下一个key
     //暂时只考虑周围4个点
     let i=0;
@@ -127,7 +130,7 @@ function build_graph(N)
     let direction;//定义方向：0代表北方，1代表东方,2代表南方，3代表西方
     let total_point=1;//总计的point的数量
 
-    //还没测试过，不知道行不行
+    //测试得好像没有问题
     //逻辑上还可以有些改进，如：让确定生成几条边就是几条边，不会因为方向随机而造成多次走一条边
     while(total_point<N)
     {
@@ -149,7 +152,7 @@ function build_graph(N)
                     if(key-110>=0)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].in_road(key-110))
+                        if((!Place_list[key].in_road(key-110))&&(!Place_list[key-110].in_road(key)))
                         {   //路是双向的
                             Place_list[key].add_road(new Road(key-110));
                             Place_list[key-110].add_road(new Road(key));
@@ -160,6 +163,7 @@ function build_graph(N)
                         {
                             total_point++;
                             Place_list[key-110].in_use=true;
+                            map.addOverlay(Place_list[key-110].marker);
                         }
                     }
                     break;
@@ -168,7 +172,7 @@ function build_graph(N)
                     if(index2x(key)+1<110)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].in_road(key,key+1))
+                        if(!Place_list[key].in_road(key,key+1)&&(!Place_list[key+1].in_road(key)))
                         {   //路是双向的
                             Place_list[key].add_road(new Road(key+1));
                             Place_list[key+1].add_road(new Road(key));                           
@@ -179,6 +183,7 @@ function build_graph(N)
                         {
                             total_point++;
                             Place_list[key+1].in_use=true;
+                            map.addOverlay(Place_list[key+1].marker);
                         }
                     }
                     break;
@@ -187,7 +192,7 @@ function build_graph(N)
                     if(key+110<12100)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].in_road(key,key+110))
+                        if(!Place_list[key].in_road(key,key+110)&&(!Place_list[key+110].in_road(key)))
                         {   //路是双向的
                             Place_list[key].add_road(new Road(key+110));
                             Place_list[key+110].add_road(new Road(key));                         
@@ -198,6 +203,7 @@ function build_graph(N)
                         {
                             total_point++;
                             Place_list[key+110].in_use=true;
+                            map.addOverlay(Place_list[key+110].marker);
                         }
                     }
                     break;
@@ -206,7 +212,7 @@ function build_graph(N)
                     if(index2x(key)-1>=0)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].in_road(key,key-1))
+                        if(!Place_list[key].in_road(key,key-1)&&(!Place_list[key-1].in_road(key)))
                         {   //路是双向的
                             Place_list[key].add_road(new Road(key-1));
                             Place_list[key-1].add_road(new Road(key));                          
@@ -217,6 +223,7 @@ function build_graph(N)
                         {
                             total_point++;
                             Place_list[key-1].in_use=true;
+                            map.addOverlay(Place_list[key-1].marker);
                         }
                     }
                     break;
@@ -244,7 +251,7 @@ function map_show(x,y)
         {
             queue.push(source);//push入队
             list.push(source);//加入显示列表
-            map.addoverlay(Place_list[list[i]].marker);//添加标记点marker
+            Place_list[list[i]].marker.show();//显示标记点marker
         }
         //将与当前节点相邻，且不list中的节点push入queue
         for(i=0;i<Place_list[queue[0]].road_list.length;i++)
