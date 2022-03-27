@@ -19,9 +19,10 @@ function Place(idx,road_num,use,lng,lat)
     this.marker=new BMapGL.Marker(this.point);//marker
     this.add_road=function(road)//加路
     {
-        //如果一起加路的话就直接卡死了
-        //road.line=new BMapGL.Polyline([this.point,Place_list[road.index].point],{strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});
-        //map.addOverlay(road.line);
+        //虽然卡一开始会卡一下，但完全加载好之后还能接受
+        road.line=new BMapGL.Polyline([this.point,Place_list[road.index].point],{strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});
+        map.addOverlay(road.line);
+        //road.line.hide();
         this.road_list.push(road);
         this.num++;   
     };
@@ -269,5 +270,19 @@ function map_show(x,y)
         //移除位于队首的节点        
         queue.shift();
     }
+
 }
 
+//遍历隐藏所有的marker和polyline
+function hide_all()
+{
+    let i,j;
+    for(i=0;i<Place_list.length;i++)
+    {
+        Place_list[i].marker.hide();
+        for(j=0;j<Place_list[i].road_list.length;j++)
+        {
+            Place_list[i].road_list[j].line.hide();
+        }
+    }
+}

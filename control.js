@@ -1,4 +1,5 @@
 //按钮控件，用于执行一定的功能
+//该按钮用于测试地图的生成
 function create_map(x_offset,y_offset) {
     this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
     this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
@@ -19,22 +20,7 @@ create_map.prototype.initialize = function(map){
     {
         let N=10000;
         init_Places();
-        build_graph(N);
-        let i;
-        let flag=0;
-        for(i=0;i<Place_list.length;i++)
-        {
-            if(Place_list[i].in_use==true)
-            {
-                 console.log("this is the length of road_list: "+Place_list[i].road_list.length+" its point is:"+Place_list[i].index);
-                 flag++;
-            }
-            else
-            {   
-                console.log("this index is not in_use:"+i);
-            }
-        }
-        console.log("totoal in_use point:"+flag);
+        build_graph(N);      
     }
    // 添加相关DOM元素
     map.getContainer().appendChild(div);
@@ -44,13 +30,19 @@ create_map.prototype.initialize = function(map){
 var create_graph = new create_map(20,20);
 map.addControl(create_graph);
 
-//搜索函数
+//搜索函数,输入坐标后显示周围100个点和边,用于测试显示
 function search()
-{
-    var x=document.getElementById("x");
-    var y=document.getElementById("y");
-    window.alert("x坐标是:"+x.value+" y坐标是:"+y.value)
+{    
+    //var x=document.getElementById("x");//输入的x坐标
+    //var y=document.getElementById("y");//输入的y坐标
+    map.clearOverlays();//清除所有覆盖物
+    map.flyTo(Place_list[12].point,13);//跳转到中心点处，并设置缩放等级
+    //map_show(x,y);//调用函数显示
+
+    //window.alert("x坐标是:"+x.value+" y坐标是:"+y.value)
+    
 }
+
 
 
 
