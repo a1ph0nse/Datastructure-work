@@ -20,21 +20,16 @@ function Place(idx,road_num,use,lng,lat)
     this.add_road=function(road)//加路
     {
         this.road_list.push(road);
-        num++;   
+        this.num++;   
     };
-    //连出一条路,路的样式可以调整一下
-    this.show_road=function(road_index)
-    {
-        map.addoverlay(new BMapGL.Polyline([this.point,Place_list[road_index].point],{strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5}));
-    }
     //判断某index的road是否在road_list中,如果在则true,不再则false
-    this.in_road(road_index)
+    this.in_road=function (idx)
     {
         let flag=false;
         let i;
         for(i=0;i<this.num;i++)
         {
-            if(road_list[i].index==road_index)
+            if(this.road_list[i].index==idx)
             {
                 return true;
             }
@@ -43,7 +38,14 @@ function Place(idx,road_num,use,lng,lat)
                 continue;
             }
         }
+        return flag;
     }
+    //连出一条路,路的样式可以调整一下
+    this.show_road=function(road_index)
+    {
+        map.addoverlay(new BMapGL.Polyline([this.point,Place_list[road_index].point],{strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5}));
+    }
+
 
 }
 
@@ -93,6 +95,8 @@ function randomcreater(min,max)
     return Math.floor(Math.random()*(max-min))+min;
 }
 
+
+
 //初始化图上的地点的位置信息（经纬度）
 var Place_list=[];//记录Place的数组
 function init_Places()
@@ -103,7 +107,7 @@ function init_Places()
         for(j=0;j<110;j++)
         {
             //把新建立的Place根据index的顺序push到Place_list
-            Place_list.push(Place(xy2index(j,i),0,false,lng_base-lng_offset*j, lat_base-lat_offset*i));
+            Place_list.push(new Place(xy2index(j,i),0,false,lng_base-lng_offset*j, lat_base-lat_offset*i));
         }
     }
 }
@@ -115,6 +119,7 @@ function build_graph(N)
     //start_index=randomcreater(0,12100);
     //此处考虑使用一个变量指向当前选中的点的index
     let key=randomcreater(0,12100);
+    Place_list[key].in_use=true;
     let next_key;//用于找到下一个key
     //暂时只考虑周围4个点
     let i=0;
@@ -122,12 +127,11 @@ function build_graph(N)
     let direction;//定义方向：0代表北方，1代表东方,2代表南方，3代表西方
     let total_point=1;//总计的point的数量
 
-    road_num=randomcreater(1,5);
-
     //还没测试过，不知道行不行
     //逻辑上还可以有些改进，如：让确定生成几条边就是几条边，不会因为方向随机而造成多次走一条边
     while(total_point<N)
     {
+        road_num=randomcreater(1,5);
         //对选中点key的周围几个点随机生成边，如果这个点没有纳入，则纳入
         for(i=0;i<road_num;i++)
         {
@@ -145,10 +149,10 @@ function build_graph(N)
                     if(key-110>=0)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].road_list.in_road(key-110))
+                        if(!Place_list[key].in_road(key-110))
                         {   //路是双向的
-                            Place_list[key].road_list.add_road(new Road(key-110));
-                            Place_list[key-110].road_list.add_road(new Road(key));
+                            Place_list[key].add_road(new Road(key-110));
+                            Place_list[key-110].add_road(new Road(key));
                         }
                         next_key=key-110;//设置next_key
                         //还要判断是否已经纳入要显示的点，未纳入则纳入
@@ -164,10 +168,10 @@ function build_graph(N)
                     if(index2x(key)+1<110)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].road_list.in_road(key+1))
+                        if(!Place_list[key].in_road(key,key+1))
                         {   //路是双向的
-                            Place_list[key].road_list.add_road(new Road(key+1));
-                            Place_list[key+1].road_list.add_road(new Road(key));                           
+                            Place_list[key].add_road(new Road(key+1));
+                            Place_list[key+1].add_road(new Road(key));                           
                         }
                         next_key=key+1;//设置next_key
                         //还要判断是否已经纳入要显示的点，未纳入则纳入
@@ -183,10 +187,10 @@ function build_graph(N)
                     if(key+110<12100)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].road_list.in_road(key+110))
+                        if(!Place_list[key].in_road(key,key+110))
                         {   //路是双向的
-                            Place_list[key].road_list.add_road(new Road(key+110));
-                            Place_list[key+110].road_list.add_road(new Road(key));                         
+                            Place_list[key].add_road(new Road(key+110));
+                            Place_list[key+110].add_road(new Road(key));                         
                         }
                         next_key=key+110;//设置next_key
                         //还要判断是否已经纳入要显示的点，未纳入则纳入
@@ -202,10 +206,10 @@ function build_graph(N)
                     if(index2x(key)-1>=0)
                     {                  
                         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                        if(!Place_list[key].road_list.in_road(key-1))
+                        if(!Place_list[key].in_road(key,key-1))
                         {   //路是双向的
-                            Place_list[key].road_list.add_road(new Road(key-1));
-                            Place_list[key-1].road_list.add_road(new Road(key));                          
+                            Place_list[key].add_road(new Road(key-1));
+                            Place_list[key-1].add_road(new Road(key));                          
                         }
                         next_key = key-1;//设置next_key
                         //还要判断是否已经纳入要显示的点，未纳入则纳入
