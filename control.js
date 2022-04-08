@@ -1,5 +1,6 @@
 //按钮控件，用于执行一定的功能
 //该按钮用于测试地图的生成
+//一些控件需要在地图生成之后才能出现，否则会出错
 function create_map(x_offset,y_offset) {
     this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
     this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
@@ -35,7 +36,7 @@ function search()
 {    
     //var x=document.getElementById("x");//输入的x坐标
     //var y=document.getElementById("y");//输入的y坐标
-    map.clearOverlays();//清除所有覆盖物
+    //map.clearOverlays();//清除所有覆盖物
     map.flyTo(Place_list[12].point,13);//跳转到中心点处，并设置缩放等级
     //map_show(x,y);//调用函数显示
 
@@ -43,11 +44,8 @@ function search()
     
 }
 
+//显示路况图的控件,之后说不定还要补充一个恢复颜色的控件
+function show_traffic()
+{
 
-
-
-
-
-
-
-
+}

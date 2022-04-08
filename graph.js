@@ -56,6 +56,7 @@ function Road(idx)
 {
     this.index=idx;//地点编号
     this.length;//路长，从后端获取
+    //this.length=60;//如果后端弄不到的话，单位为km
     this.time;//通行时间，从后端获取
     this.line;//路的连线
     this.get_length=function(){}//获取路长
@@ -93,7 +94,7 @@ function index2y(index)
 }
 
 //指定范围内的随机数生成 [min,max)
-function randomcreater(min,max)
+function randomcreator(min,max)
 {
     return Math.floor(Math.random()*(max-min))+min;
 }
@@ -121,7 +122,7 @@ function build_graph(N)
     //先在110*110=12100个点中随机选择一个点作为起始点
     //start_index=randomcreater(0,12100);
     //此处考虑使用一个变量指向当前选中的点的index
-    let key=randomcreater(0,12100);
+    let key=randomcreator(0,12100);
     Place_list[key].in_use=true;
     map.addOverlay(Place_list[key].marker)
     let next_key;//用于找到下一个key
@@ -135,7 +136,7 @@ function build_graph(N)
     //逻辑上还可以有些改进，如：让确定生成几条边就是几条边，不会因为方向随机而造成多次走一条边
     while(total_point<N)
     {
-        road_num=randomcreater(1,5);
+        road_num=randomcreator(1,5);
         //对选中点key的周围几个点随机生成边，如果这个点没有纳入，则纳入
         for(i=0;i<road_num;i++)
         {
@@ -144,7 +145,7 @@ function build_graph(N)
             {
                 break;
             }
-            direction=randomcreater(0,4);//随机生成方向
+            direction=randomcreator(0,4);//随机生成方向
             //方向是随机生成的，所以可能多次都是往一个方向去
             switch(direction)
             {
@@ -285,4 +286,63 @@ function hide_all()
             Place_list[i].road_list[j].line.hide();
         }
     }
+}
+
+
+
+//TIME1,TIME2,TIME3用于区分拥堵情况，不拥堵为绿色，有点拥堵为黄色，拥堵为红色
+const TIME1=3600,TIME2=5400,TIME3=7200;
+//路况图
+function Traffic_graph()
+{
+    let i = 0;
+    let j = 0;
+    for(i=0;i<12100;i++)
+    {
+        if(Place_list[i].in_use)
+        {
+            for(j=0;j<Place_list[i].num;j++)
+            {
+                /*随机生成通行时间
+                Place_list[i].road_list[j].time=randomcreator(3600,9001);
+                */
+                if(Place_list[i].road_list[j].time>=TIME1&&Place_list[i].road_list[j].time<TIME2)//不拥堵
+                {
+                    Place_list[i].road_list[j].line.setcolor("green");//不知道这个函数是不是这么用的
+                    Place_list[i].road_list[j].line.show();
+                }
+                else
+                {
+                    if(Place_list[i].road_list[j].time<TIME3&&Place_list[i].road_list[j].time>=TIME2)//有一点拥堵
+                    {
+                        Place_list[i].road_list[j].line.setcolor("yellow");//不知道这个函数是不是这么用的
+                        Place_list[i].road_list[j].line.show();
+                    }
+                    else
+                    {
+                        if(Place_list[i].road_list[j].time>=TIME3)//拥堵
+                        {
+                            Place_list[i].road_list[j].line.setcolor("red");//不知道这个函数是不是这么用的
+                            Place_list[i].road_list[j].line.show();
+                        }
+                        else//时间<=0，说明有问题
+                        {
+                            window.alert("时间生成的有问题");
+                            return;
+                        }
+                        
+                    }
+                }
+            }
+        }
+        else
+        {
+            continue;
+        }
+    }
+}
+
+function change_scale()
+{
+    
 }
