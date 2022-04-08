@@ -1,6 +1,8 @@
 var map = new BMapGL.Map("container");
 var point = new BMapGL.Point(116.404, 39.915);
+//初始的缩放等级可以调整一下
 map.centerAndZoom(point, 15); 
+//滚轮放缩只是方便调试，最后要去掉
 map.enableScrollWheelZoom(true);
 //以下4个值的内容均要调整
 var lng_offset=0.1;//lng（经度）上的offset
@@ -344,5 +346,5 @@ function Traffic_graph()
 
 function change_scale()
 {
-    
+
 }
