@@ -22,10 +22,11 @@ create_map.prototype.initialize = function(map)
     {
         //也许可以整个输入框输入N
         let N=10000;
-        init_Places();
+        Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset);
         build_graph(N);      
         create_graph.hide();
         road_Graph.show();
+        traffic_show.show();
     }
    // 添加相关DOM元素
     map.getContainer().appendChild(div);
@@ -41,7 +42,7 @@ function search()
     //var x=document.getElementById("x");//输入的x坐标
     //var y=document.getElementById("y");//输入的y坐标
     //map.clearOverlays();//清除所有覆盖物
-    map.flyTo(Place_list[12].point,13);//跳转到中心点处，并设置缩放等级
+    map.flyTo(Complete_graph.place_list[12].point,13);//跳转到中心点处，并设置缩放等级
     //map_show(x,y);//调用函数显示
 
     //window.alert("x坐标是:"+x.value+" y坐标是:"+y.value)
@@ -74,6 +75,7 @@ traffic_graph.prototype.initialize = function(map)
 }
 var traffic_show = new traffic_graph(150,20);
 map.addControl(traffic_show);
+traffic_show.hide();
 
 function road_graph(x_offset, y_offset)
 {
@@ -94,7 +96,7 @@ road_graph.prototype.initialize = function(map)
     black_road.onclick = function()
     {
         //恢复颜色的函数
-        to_black();
+        Complete_graph.default_color();
     }
     map.getContainer().appendChild(black_road);
     return black_road;
