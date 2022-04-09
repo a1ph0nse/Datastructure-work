@@ -20,10 +20,12 @@ create_map.prototype.initialize = function(map)
     // 设置相关事件函数
     div.onclick = function()
     {
+        //也许可以整个输入框输入N
         let N=10000;
         init_Places();
         build_graph(N);      
-        //增加一个隐藏该按键的功能
+        create_graph.hide();
+        road_Graph.show();
     }
    // 添加相关DOM元素
     map.getContainer().appendChild(div);
@@ -70,7 +72,7 @@ traffic_graph.prototype.initialize = function(map)
     map.getContainer().appendChild(traffic);
     return traffic;
 }
-var trffic_show = new traffic_graph(50,20);
+var traffic_show = new traffic_graph(150,20);
 map.addControl(traffic_show);
 
 function road_graph(x_offset, y_offset)
@@ -81,21 +83,83 @@ function road_graph(x_offset, y_offset)
 road_graph.prototype = new BMapGL.Control();
 road_graph.prototype.initialize = function(map) 
 {
-    var blue_road = document.createElement('blue_road');
-    blue_road.appendChild(document.createTextNode('测试道路图'));
-    blue_road.style.cursor = "pointer";
-    blue_road.style.padding = "7px 10px";
-    blue_road.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
-    blue_road.style.borderRadius = "5px";
-    blue_road.style.backgroundColor = "white";
+    var black_road = document.createElement('blue_road');
+    black_road.appendChild(document.createTextNode('测试道路图'));
+    black_road.style.cursor = "pointer";
+    black_road.style.padding = "7px 10px";
+    black_road.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
+    black_road.style.borderRadius = "5px";
+    black_road.style.backgroundColor = "white";
 
-    blue_road.onclick = function()
+    black_road.onclick = function()
     {
         //恢复颜色的函数
-        
+        to_black();
     }
-    map.getContainer().appendChild(blue_road);
-    return blue_road;
+    map.getContainer().appendChild(black_road);
+    return black_road;
 }
+var road_Graph = new road_graph(20,20);
+map.addControl(road_Graph);
+road_Graph.hide();
 
-//放缩的控件
+
+//自定义的放缩控件
+
+//放大的控件
+function expand(x_offset, y_offset)
+{
+    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_RIGHT;
+    this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
+}
+expand.prototype = new BMapGL.Control();
+expand.prototype.initialize = function(map) 
+{
+    var expansion = document.createElement('expansion');
+    expansion.appendChild(document.createTextNode('+'));
+    expansion.style.cursor = "pointer";
+    expansion.style.padding = "7px 10px";
+    expansion.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
+    expansion.style.borderRadius = "5px";
+    expansion.style.backgroundColor = "white";
+
+    expansion.onclick = function()
+    {
+        map.zoomIn();
+        //进行的操作
+        //...
+    }
+    map.getContainer().appendChild(expansion);
+    return expansion;
+}
+var Expansion = new expand(20,20);
+map.addControl(Expansion);
+
+//缩小的控件
+function reduce(x_offset, y_offset)
+{
+    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_RIGHT;
+    this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
+}
+reduce.prototype = new BMapGL.Control();
+reduce.prototype.initialize = function(map) 
+{
+    var reduction = document.createElement('reduction');
+    reduction.appendChild(document.createTextNode('-'));
+    reduction.style.cursor = "pointer";
+    reduction.style.padding = "7px 10px";
+    reduction.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
+    reduction.style.borderRadius = "5px";
+    reduction.style.backgroundColor = "white";
+
+    reduction.onclick = function()
+    {
+        map.zoomOut();
+        //进行的操作
+        //...
+    }
+    map.getContainer().appendChild(reduction);
+    return reduction;
+}
+    var Reduction = new reduce(60,20);
+    map.addControl(Reduction);
