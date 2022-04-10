@@ -1,7 +1,7 @@
 var map = new BMapGL.Map("container",{minzoom:8,maxzoom:14});
-var point = new BMapGL.Point(113.429, 38.4275);
+var central_point = new BMapGL.Point(113.429, 38.4275);
 //初始的缩放等级可以调整一下
-map.centerAndZoom(point, 8); 
+map.centerAndZoom(central_point, 8); 
 //滚轮放缩只是方便调试，最后要去掉
 map.enableScrollWheelZoom(true);
 //以下4个值的内容均要调整
@@ -435,17 +435,23 @@ const TIME1=3600,TIME2=5400,TIME3=7200;
 //麻了，为什么这么多种红黄绿
 function Traffic_graph()
 {
+    Big_graph.hide_all();
+    Small_graph.hide_all();
+    map.setZoom(12);
     let i = 0;
     let j = 0;
     for(i=0;i<TOTAL;i++)
     {
         if(Complete_graph.place_list[i].in_use)
         {
+            Complete_graph.place_list[i].marker.show();
             for(j=0;j<Complete_graph.place_list[i].road_list.length;j++)
             {
                 //随机生成通行时间
                 Complete_graph.place_list[i].road_list[j].time=randomcreator(3600,9001);
-                
+                /*
+                如果可以请求的话把上面那句换了
+                */
 
                 if(Complete_graph.place_list[i].road_list[j].time>=TIME1&&Complete_graph.place_list[i].road_list[j].time<TIME2)//不拥堵
                 {
@@ -637,8 +643,5 @@ function change_graph_to_show(zoom_level)
         default:
             window.alert("缩放等级出现了问题！")
             break;
-    }
-    
-
-    
+    }    
 }

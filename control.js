@@ -1,6 +1,7 @@
 //按钮控件，用于执行一定的功能
 //该按钮用于测试地图的生成
 //一些控件需要在地图生成之后才能出现，否则会出错
+var flag=0;//flag=1表示路况图正在使用
 function create_map(x_offset,y_offset) {
     this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
     this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
@@ -35,7 +36,6 @@ create_map.prototype.initialize = function(map)
         Big_graph.show_all();
         //创建图的控件可以隐藏，其他控件可以出现
         create_graph.hide();
-        road_Graph.show();
         traffic_show.show();
         Expansion.show();
         Reduction.show();
@@ -81,11 +81,14 @@ traffic_graph.prototype.initialize = function(map)
     traffic.onclick = function()
     {
         Traffic_graph();
+        flag=1;
+        traffic_show.hide();
+        road_Graph.show();
     }
     map.getContainer().appendChild(traffic);
     return traffic;
 }
-var traffic_show = new traffic_graph(150,20);
+var traffic_show = new traffic_graph(20,20);
 map.addControl(traffic_show);
 traffic_show.hide();
 
@@ -109,6 +112,9 @@ road_graph.prototype.initialize = function(map)
     {
         //恢复颜色的函数
         Complete_graph.default_color();
+        flag=0;
+        road_Graph.hide();
+        traffic_show.show();
     }
     map.getContainer().appendChild(black_road);
     return black_road;
@@ -142,7 +148,10 @@ expand.prototype.initialize = function(map)
         //放大
         map.zoomIn();
         //进行的操作
-        change_graph_to_show(map.getZoom()+1);
+        if(flag==0)//表明此时可以对点进行缩放
+        {
+            change_graph_to_show(map.getZoom()+1);
+        }
     }
     map.getContainer().appendChild(expansion);
     return expansion;
@@ -173,7 +182,10 @@ reduce.prototype.initialize = function(map)
         //缩小
         map.zoomOut();
         //进行的操作
-        change_graph_to_show(map.getZoom()-1);
+        if(flag==0)//表明此时可以对点进行缩放
+        {
+            change_graph_to_show(map.getZoom()-1);
+        }
     }
     map.getContainer().appendChild(reduction);
     return reduction;
