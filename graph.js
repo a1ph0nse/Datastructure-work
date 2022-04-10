@@ -58,8 +58,8 @@ function Place(idx,use,lng,lat)
 function Road(idx)
 {
     this.index=idx;//地点编号
-    this.length;//路长，从后端获取
-    //this.length=60;//如果后端弄不到的话，单位为km
+    this.distance;//路长，从后端获取
+    //this.distance=60;//如果后端弄不到的话，单位为km
     this.time;//通行时间，从后端获取
     this.line;//路的连线
     this.get_length=function(){}//获取路长
