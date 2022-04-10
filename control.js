@@ -22,11 +22,23 @@ create_map.prototype.initialize = function(map)
     {
         //也许可以整个输入框输入N
         let N=10000;
-        Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset);
-        build_graph(N);      
+        let i,j;
+        Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset,LENGTH);
+        build_graph(N);
+        Complete_graph.hide_all();
+        //Complete_graph.show_all(); 
+        Small_graph.init(lng_base-lng_offset*7.5,lat_base-lat_offset*7.5,lng_offset*15,lat_offset*15,BLOCK_LENGTH2);
+        build_Small_graph();
+        Small_graph.hide_all();
+        Big_graph.init(lng_base-lng_offset*15,lat_base-lat_offset*15,lng_offset*30,lat_offset*30,BLOCK_LENGTH1);
+        build_Big_graph();
+        Big_graph.show_all();
+        //创建图的控件可以隐藏，其他控件可以出现
         create_graph.hide();
         road_Graph.show();
         traffic_show.show();
+        Expansion.show();
+        Reduction.show();
     }
    // 添加相关DOM元素
     map.getContainer().appendChild(div);
@@ -127,15 +139,17 @@ expand.prototype.initialize = function(map)
 
     expansion.onclick = function()
     {
+        //放大
         map.zoomIn();
         //进行的操作
-        //...
+        change_graph_to_show(map.getZoom()+1);
     }
     map.getContainer().appendChild(expansion);
     return expansion;
 }
 var Expansion = new expand(20,20);
 map.addControl(Expansion);
+Expansion.hide();
 
 //缩小的控件
 function reduce(x_offset, y_offset)
@@ -156,12 +170,14 @@ reduce.prototype.initialize = function(map)
 
     reduction.onclick = function()
     {
+        //缩小
         map.zoomOut();
         //进行的操作
-        //...
+        change_graph_to_show(map.getZoom()-1);
     }
     map.getContainer().appendChild(reduction);
     return reduction;
 }
-    var Reduction = new reduce(60,20);
-    map.addControl(Reduction);
+var Reduction = new reduce(60,20);
+map.addControl(Reduction);
+Reduction.hide();
