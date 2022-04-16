@@ -13,6 +13,12 @@ var lat_base=39.915//lat的基准值
 //图的长宽为LENGTH,点的总数为LENGTH**2=TOTAL,Big_graph的区域长为30，一行4个,small_representative_graph的区域长为15，一行8个
 const LENGTH=120,TOTAL=14400,BLOCK_LENGTH1=4,BLOCK_LENGTH2=8;
 
+//指定范围内的随机数生成 [min,max)
+function randomcreator(min,max)
+{
+    return Math.floor(Math.random()*(max-min))+min;
+}
+
 //地点的类
 function Place(idx,use,lng,lat)
 {
@@ -58,7 +64,7 @@ function Place(idx,use,lng,lat)
 function Road(idx)
 {
     this.index=idx;//地点编号
-    this.distance;//路长，从后端获取
+    this.distance=randomcreator(1,10);//路长随机生成
     //this.distance=60;//如果后端弄不到的话，单位为km
     this.time;//通行时间，从后端获取
     this.line;//路的连线
@@ -172,12 +178,6 @@ function index2x(index)
 function index2y(index)
 {
     return parseInt((index-index2x(index))/LENGTH,10);
-}
-
-//指定范围内的随机数生成 [min,max)
-function randomcreator(min,max)
-{
-    return Math.floor(Math.random()*(max-min))+min;
 }
 
 //路的连接，即图的生成,N为需要点的数量
