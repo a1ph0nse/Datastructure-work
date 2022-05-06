@@ -193,3 +193,62 @@ reduce.prototype.initialize = function(map)
 var Reduction = new reduce(60,20);
 map.addControl(Reduction);
 Reduction.hide();
+
+//发送图的按钮
+function send(x_offset, y_offset)
+{
+    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_RIGHT;
+    this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
+}
+send.prototype = new BMapGL.Control();
+send.prototype.initialize = function(map) 
+{
+    var send_graph = document.createElement('reduction');
+    send_graph.appendChild(document.createTextNode('-'));
+    send_graph.style.cursor = "pointer";
+    send_graph.style.padding = "7px 10px";
+    send_graph.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
+    send_graph.style.borderRadius = "5px";
+    send_graph.style.backgroundColor = "white";
+
+    send_graph.onclick = function()
+    {
+        //发送图
+        
+    }
+    map.getContainer().appendChild(send_graph);
+    return send_graph;
+}
+var Get_graph = new send(90,20);
+map.addControl(Get_graph);
+//Send_graph.hide();
+
+//请求得到图
+function get_graph(x_offset, y_offset)
+{
+    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_RIGHT;
+    this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
+}
+send.prototype = new BMapGL.Control();
+send.prototype.initialize = function(map) 
+{
+    var Get_Graph = document.createElement('reduction');
+    Get_Graph.appendChild(document.createTextNode('-'));
+    Get_Graph.style.cursor = "pointer";
+    Get_Graph.style.padding = "7px 10px";
+    Get_Graph.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
+    Get_Graph.style.borderRadius = "5px";
+    Get_Graph.style.backgroundColor = "white";
+
+    Get_Graph.onclick = function()
+    {
+        //请求得到图
+        
+    }
+    map.getContainer().appendChild(Get_Graph);
+    return Get_Graph;
+}
+var Get_graph = new send(90,50);
+map.addControl(Get_graph);
+//Send_graph.hide();
+

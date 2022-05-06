@@ -145,8 +145,10 @@ function Graph()
 
 //记录最大数量Place的图
 var Complete_graph = new Graph();
+
 //记录Big_graph(区域大小为30*30)的图
 var Big_graph = new Graph();
+
 //记录small_representative_graph(区域大小为15*15)的图
 var Small_graph = new Graph();
 
