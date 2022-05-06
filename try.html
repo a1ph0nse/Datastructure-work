@@ -2,18 +2,53 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="X-UA-Compatible">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Documentation</title>
         <script src="./axios.min.js"></script>
     </head>
     <body>
         <script type="module">
-            axios.get("https://carnation.easypus.com/api/admin/project/all").then((res)=>{
-                console.log(res.data.data);
-            }).catch(function(error){
-                console.log(error);
+            var i,j;
+            var obj=[];
+            var all=[];
+            for(i=0;i<10;i++)
+            {   
+                obj=[];
+                for(j=0;j<3;j++)
+                {
+                    obj.push(i+j);
+                }
+                all.push(obj);
+            }
+            console.log(all);
+
+            
+ 
+            // axios.post("https://1.14.150.210:8080/road/file/save").then((res)=>{
+            //     console.log(res.data.data);
+            //     console.log(res.data.data.content[0].classificationId);
+            //     console.log(typeof(res.data.data.content[0].classificationId));
+            //     console.log(res.data.data.content[0].createTime);
+            //     console.log(typeof(res.data.data.content[0].createTime));
+            //  }).catch(function(error){
+            //     console.log(error);
+            // });
+
+            axios({
+                method: 'POST',
+                url: "http://1.14.150.210:8080/road/file/save",
+                data: {
+                map:{all}
+                }
+             }).then((res)=>{
+                console.log(res.data);
+             })
+             .catch(function(error){
+                console.log(error)
             });
+
+            
         </script>
     </body>
 
