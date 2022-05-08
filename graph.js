@@ -66,7 +66,7 @@ function Road(idx)
     this.index=idx;//地点编号
     this.distance=randomcreator(1,10);//路长随机生成
     //this.distance=60;//如果后端弄不到的话，单位为km
-    this.time;//通行时间，从后端获取
+    this.time;//通行时间
     this.line;//路的连线
     this.get_length=function(){}//获取路长
     this.get_time=function(){}//获取通行时间
@@ -76,6 +76,7 @@ function Road(idx)
 function Graph()
 {
     this.place_list=[];//地点的list
+    //初始化函数，把place_list这个数组中每个place的基本信息弄好，road_list中的内容之后再说
     this.init=function(ln_base,la_base,ln_offset,la_offset,length)
     {
         let i,j;//此处i,j分别相当于y,x

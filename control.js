@@ -22,7 +22,7 @@ create_map.prototype.initialize = function(map)
     div.onclick = function()
     {
         //也许可以整个输入框输入N
-        let N=10000;
+        let N=2000;
         let i,j;
         Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset,LENGTH);
         build_graph(N);
@@ -39,6 +39,7 @@ create_map.prototype.initialize = function(map)
         traffic_show.show();
         Expansion.show();
         Reduction.show();
+        Send_graph.show();
     }
    // 添加相关DOM元素
     map.getContainer().appendChild(div);
@@ -197,14 +198,14 @@ Reduction.hide();
 //发送图的按钮
 function send(x_offset, y_offset)
 {
-    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_RIGHT;
+    this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
     this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
 }
 send.prototype = new BMapGL.Control();
 send.prototype.initialize = function(map) 
 {
-    var send_graph = document.createElement('reduction');
-    send_graph.appendChild(document.createTextNode('-'));
+    var send_graph = document.createElement('send_graph');
+    send_graph.appendChild(document.createTextNode('存储图'));
     send_graph.style.cursor = "pointer";
     send_graph.style.padding = "7px 10px";
     send_graph.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
@@ -214,26 +215,27 @@ send.prototype.initialize = function(map)
     send_graph.onclick = function()
     {
         //发送图
-        
+        send_to(Complete_graph);
+        map.removeControl(Send_graph);
     }
     map.getContainer().appendChild(send_graph);
     return send_graph;
 }
-var Get_graph = new send(90,20);
-map.addControl(Get_graph);
-//Send_graph.hide();
+var Send_graph = new send(150,20);
+map.addControl(Send_graph);
+Send_graph.hide();
 
 //请求得到图
 function get_graph(x_offset, y_offset)
 {
-    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_RIGHT;
+    this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
     this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
 }
 send.prototype = new BMapGL.Control();
 send.prototype.initialize = function(map) 
 {
-    var Get_Graph = document.createElement('reduction');
-    Get_Graph.appendChild(document.createTextNode('-'));
+    var Get_Graph = document.createElement('get_graph');
+    Get_Graph.appendChild(document.createTextNode('获取图'));
     Get_Graph.style.cursor = "pointer";
     Get_Graph.style.padding = "7px 10px";
     Get_Graph.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
@@ -242,13 +244,31 @@ send.prototype.initialize = function(map)
 
     Get_Graph.onclick = function()
     {
-        //请求得到图
-        
+        //加一个输入文件名，转成string作为get_form的参数
+
+        //先把图清掉
+        Complete_graph.place_list.splice(0,14400);
+        Small_graph.place_list.splice(0,64);
+        Big_graph.place_list.splice(0,16);
+        map.clearOverlays();
+        Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset,LENGTH);
+        Small_graph.init(lng_base-lng_offset*7.5,lat_base-lat_offset*7.5,lng_offset*15,lat_offset*15,BLOCK_LENGTH2);
+        Big_graph.init(lng_base-lng_offset*15,lat_base-lat_offset*15,lng_offset*30,lat_offset*30,BLOCK_LENGTH1);
+        //请求得到图,并根据获取的图更新三个图
+        get_from();
+        build_Small_graph();
+        build_Big_graph();
+        Complete_graph.hide_all();
+        Small_graph.hide_all();
+        Big_graph.show_all();
+        traffic_show.show();
+
+        //调整缩放等级
+        map.setZoom(8);
     }
     map.getContainer().appendChild(Get_Graph);
     return Get_Graph;
 }
-var Get_graph = new send(90,50);
+var Get_graph = new send(150,60);
 map.addControl(Get_graph);
 //Send_graph.hide();
-
