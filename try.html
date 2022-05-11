@@ -9,7 +9,7 @@
     </head>
     <body>
         <script type="module">
-            var i,j;
+            var i,j,c=5;
             var obj=[];
             var all=[];
             for(i=0;i<10;i++)
@@ -17,38 +17,56 @@
                 obj=[];
                 for(j=0;j<3;j++)
                 {
-                    obj.push(i+j);
+                    obj.push(c);
                 }
                 all.push(obj);
             }
             console.log(all);
 
-            
- 
-            // axios.post("https://1.14.150.210:8080/road/file/save").then((res)=>{
-            //     console.log(res.data.data);
-            //     console.log(res.data.data.content[0].classificationId);
-            //     console.log(typeof(res.data.data.content[0].classificationId));
-            //     console.log(res.data.data.content[0].createTime);
-            //     console.log(typeof(res.data.data.content[0].createTime));
-            //  }).catch(function(error){
-            //     console.log(error);
+            var filename;
+            // axios({
+            //     method: 'POST',
+            //     url: "http://1.14.150.210:8080/road/file/save",
+            //     data: {
+            //     map:{all}
+            //     }
+            // }).then((res)=>{
+            //     console.log(res.data.data.file_name);
+                
+            // })
+            //  .catch(function(error){
+            //     console.log(error)
             // });
-
-            axios({
-                method: 'POST',
-                url: "http://1.14.150.210:8080/road/file/save",
-                data: {
-                map:{all}
-                }
-             }).then((res)=>{
-                console.log(res.data);
-             })
-             .catch(function(error){
-                console.log(error)
-            });
-
             
+            // axios({
+            //         method: 'GET',
+            //         url:"http://1.14.150.210:8080/road/file/list",
+            //     }).then((res) => {
+            //         console.log(res.data.data);
+            //         console.log(res.data.data.file_list[res.data.data.file_list.length-1]);
+
+            //     }).catch((err) => {
+            //         console.log(error)
+            //     });
+            
+            // axios({
+            //     method: 'GET',
+            //     url:"http://1.14.150.210:8080/road/file",
+            //     params: {
+            //     name: "1652176145759"
+            //     }
+            // }).then((res) => {
+            //     console.log(res.data.data.map.send_data);
+            // }).catch((err) => {
+            //     console.log(error)
+            // });
+            
+            var N=prompt("请输入图中点的个数N(0<N<=14400):");
+            if(1)
+            {
+                console.log(N.length);
+                
+            }
         </script>
     </body>
 
