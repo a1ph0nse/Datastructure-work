@@ -29,10 +29,17 @@ function Place(idx,use,lng,lat)
     this.marker=new BMapGL.Marker(this.point);//marker
     this.marker.index=idx;
     this.marker.addEventListener('onclick',function()
-    {
-        var cmd;
-        cmd = prompt("请选择你想要使用的功能:\n1.显示周围100个点\n2.最短路径");
-        window.alert("你选择的是:"+cmd);
+    {   
+        //点击点后会在index框中显示其index
+        if(document.getElementById("x").value=='')
+        {
+            document.getElementById("x").value=this.index.toString();
+        }
+        else
+        {
+            document.getElementById("y").value=this.index;
+        }
+        
         return this.index;
     });
 
