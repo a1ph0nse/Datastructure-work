@@ -27,6 +27,15 @@ function Place(idx,use,lng,lat)
     this.in_use=use;//是否使用该点,布尔值表示
     this.point=new BMapGL.Point(lng,lat);//point
     this.marker=new BMapGL.Marker(this.point);//marker
+    this.marker.index=idx;
+    this.marker.addEventListener('onclick',function()
+    {
+        var cmd;
+        cmd = prompt("请选择你想要使用的功能:\n1.显示周围100个点\n2.最短路径");
+        window.alert("你选择的是:"+cmd);
+        return this.index;
+    });
+
     this.add_road=function(road,graph)//加路
     {
         //虽然卡一开始会卡一下，但完全加载好之后还能接受
@@ -450,7 +459,7 @@ function Traffic_graph()
             Complete_graph.place_list[i].marker.show();
             for(j=0;j<Complete_graph.place_list[i].road_list.length;j++)
             {
-                //随机生成通行时间
+                //随机生成通行时间,或许可以修改一下计算方法，虽然本质上都是纯随机
                 Complete_graph.place_list[i].road_list[j].time=randomcreator(3600,9001);
                 /*
                 如果可以请求的话把上面那句换了

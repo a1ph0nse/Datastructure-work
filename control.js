@@ -25,12 +25,17 @@ create_map.prototype.initialize = function(map)
         var N=prompt("请输入图中点的个数N(0<N<=14400):");
         if(N<=0||N>14400)
         {
-            window.alert("输入的个数N的大小超出允许的范围！");
+            window.alert("输入的个数N的大小超出允许的范围!");
             return;
         }
+        //先把图清掉
+        Complete_graph.place_list.splice(0,14400);
+        Small_graph.place_list.splice(0,64);
+        Big_graph.place_list.splice(0,16);
+        map.clearOverlays();
+        //初始化图
         Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset,LENGTH);
         build_graph(N);
-        console.log(Complete_graph);
         Complete_graph.hide_all();
         //Complete_graph.show_all(); 
         Small_graph.init(lng_base-lng_offset*7.5,lat_base-lat_offset*7.5,lng_offset*15,lat_offset*15,BLOCK_LENGTH2);
@@ -38,7 +43,6 @@ create_map.prototype.initialize = function(map)
         Small_graph.hide_all();
         Big_graph.init(lng_base-lng_offset*15,lat_base-lat_offset*15,lng_offset*30,lat_offset*30,BLOCK_LENGTH1);
         build_Big_graph();
-        console.log(Big_graph);
         Big_graph.show_all();
         //创建图的控件可以隐藏，其他控件可以出现
         create_graph.hide();
@@ -90,6 +94,7 @@ traffic_graph.prototype.initialize = function(map)
         Traffic_graph();
         flag=1;
         traffic_show.hide();
+        create_graph.hide();
         road_Graph.show();
     }
     map.getContainer().appendChild(traffic);
@@ -204,7 +209,7 @@ Reduction.hide();
 //发送图的按钮
 function send(x_offset, y_offset)
 {
-    this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
+    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_LEFT;
     this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
 }
 send.prototype = new BMapGL.Control();
@@ -227,18 +232,18 @@ send.prototype.initialize = function(map)
     map.getContainer().appendChild(send_graph);
     return send_graph;
 }
-var Send_graph = new send(150,20);
+var Send_graph = new send(20,80);
 map.addControl(Send_graph);
 Send_graph.hide();
 
 //请求得到图
 function get_graph(x_offset, y_offset)
 {
-    this.defaultAnchor=BMAP_ANCHOR_TOP_RIGHT;
+    this.defaultAnchor=BMAP_ANCHOR_BOTTOM_LEFT;
     this.defaultOffset = new BMapGL.Size(x_offset, y_offset);
 }
-send.prototype = new BMapGL.Control();
-send.prototype.initialize = function(map) 
+get_graph.prototype = new BMapGL.Control();
+get_graph.prototype.initialize = function(map) 
 {
     var Get_Graph = document.createElement('get_graph');
     Get_Graph.appendChild(document.createTextNode('获取图'));
@@ -248,34 +253,33 @@ send.prototype.initialize = function(map)
     Get_Graph.style.borderRadius = "5px";
     Get_Graph.style.backgroundColor = "white";
 
-    Get_Graph.onclick = function()
+    Get_Graph.onclick = async function()
     {
         //加一个输入文件名，转成string作为get_form的参数
-
+        var filename=prompt("请输入文件名:");
+        if(filename.length!=13)
+        {
+            window.alert("输入文件名错误!");
+            return;
+        }
         //先把图清掉
+        Complete_graph.place_list.splice(0,14400);
+        Small_graph.place_list.splice(0,64);
+        Big_graph.place_list.splice(0,16);
         map.clearOverlays();
-        Complete_graph.place_list=[];
-        
+        //重新将图初始化
         Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset,LENGTH);
-        //请求得到图,并根据获取的图更新三个图
-        get_from();
-        
-        Small_graph.place_list=[];
         Small_graph.init(lng_base-lng_offset*7.5,lat_base-lat_offset*7.5,lng_offset*15,lat_offset*15,BLOCK_LENGTH2);
-        build_Small_graph();
-
-        Big_graph.place_list=[];
         Big_graph.init(lng_base-lng_offset*15,lat_base-lat_offset*15,lng_offset*30,lat_offset*30,BLOCK_LENGTH1);
+        //请求得到图,并根据获取的图更新三个图
+        await get_from(filename);
+        //没执行完get_from()之前不准继续
+        build_Small_graph();
         build_Big_graph();
-
-        console.log(Complete_graph);
-        console.log(Small_graph);
-        console.log(Big_graph);
-        
+        //按键的显示
         Complete_graph.hide_all();
         Small_graph.hide_all();
         Big_graph.show_all();
-
         traffic_show.show();
         Expansion.show();
         Reduction.show();
@@ -286,6 +290,6 @@ send.prototype.initialize = function(map)
     map.getContainer().appendChild(Get_Graph);
     return Get_Graph;
 }
-var Get_graph = new send(150,60);
+var Get_graph = new get_graph(20,40);
 map.addControl(Get_graph);
 //Send_graph.hide();

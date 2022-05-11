@@ -51,40 +51,32 @@ function send_to(graph)
 //获取图的功能
 //从后端获取图的每一个Place的index和它的road的index(也许要包含road_num、sdistance)
 //并根据接收到的图的信息修改complete_graph、big_graph和small_graph
-function get_from()
+async function get_from(filename)
 {
-    var filename="1652176145759";
-    axios({
+    //var filename="1652176145759";
+    var res = await axios({
         method: 'GET',
         url:"http://1.14.150.210:8080/road/file",
         params: {
         name: filename
         }
-    }).then((res) => {
-        let i,j;
-        var get_map=res.data.data.map.send_data;
-        //根据申请到的内容生成图 
-        for(i=0;i<14400;i++)
-        {
-            if(get_map[i][0]!=-1)
-            {
-                map.addOverlay(Complete_graph.place_list[i].marker);
-                Complete_graph.place_list[i].in_use=true;
-                //图的信息都更新了，但是没有线连接出来,好像是原来写的show_all和hide_all用不了了
-                for(j=0;j<(get_map[i].length)/2;j++)
-                {
-                    //显示不出来，但好像确实更新了
-                    Complete_graph.place_list[i].add_road(new Road(get_map[i][2*j]),Complete_graph);
-                    Complete_graph.place_list[i].road_list[j].distance=get_map[i][2*j+1];
-                }
-            }
-            else
-            {
-                Complete_graph.place_list[i].in_use=false;
+    });
+    let i, j;
+    var get_map = res.data.data.map.send_data;
+    //根据申请到的内容生成图 
+    for (i = 0; i < 14400; i++) {
+        if (get_map[i][0] != -1) {
+            map.addOverlay(Complete_graph.place_list[i].marker);
+            Complete_graph.place_list[i].in_use = true;
+            for (j = 0; j < get_map[i].length;) {
+                let road = new Road(get_map[i][j]);
+                road.distance = get_map[i][j + 1];
+                Complete_graph.place_list[i].add_road(road, Complete_graph);
+                j = j + 2;
             }
         }
-        
-    }).catch((error) => {
-        console.log(error)
-    });
+        else {
+            Complete_graph.place_list[i].in_use = false;
+        }
+    }
 }
