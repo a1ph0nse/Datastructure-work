@@ -11,7 +11,7 @@ function send_to(graph)
     //对要发送的数据进行处理
     for(i=0;i<14400;i++)
     {
-        //对每个Place判断一次，如果in_use==true,则将这个Place相连的road的index作为数据
+        //对每个Place判断一次，如果in_use==true,则将这个Place相连的road的index以及该边的长度作为数据
         //如果in_use==false,则让其等于-1,代表这个点的in_use位为false
         Place_obj=[];
         if(graph.place_list[i].in_use==true)
@@ -19,6 +19,7 @@ function send_to(graph)
             for(j=0;j<graph.place_list[i].road_list.length;j++)
             {
                 Place_obj.push(graph.place_list[i].road_list[j].index);
+                Place_obj.push(graph.place_list[i].road_list[j].distance);
             }
             send_data.push(Place_obj);
         }
@@ -52,7 +53,7 @@ function send_to(graph)
 //并根据接收到的图的信息修改complete_graph、big_graph和small_graph
 function get_from()
 {
-    var filename="1652019068312";
+    var filename="1652176145759";
     axios({
         method: 'GET',
         url:"http://1.14.150.210:8080/road/file",
@@ -69,12 +70,12 @@ function get_from()
             {
                 map.addOverlay(Complete_graph.place_list[i].marker);
                 Complete_graph.place_list[i].in_use=true;
-                console.log(i);
-                for(j=0;j<get_map[i].length;j++)
+                //图的信息都更新了，但是没有线连接出来,好像是原来写的show_all和hide_all用不了了
+                for(j=0;j<(get_map[i].length)/2;j++)
                 {
-                    //没加上路
-                    console.log(get_map[i][j]);
-                    Complete_graph.place_list[i].add_road(new Road(get_map[i][j]),Complete_graph);
+                    //显示不出来，但好像确实更新了
+                    Complete_graph.place_list[i].add_road(new Road(get_map[i][2*j]),Complete_graph);
+                    Complete_graph.place_list[i].road_list[j].distance=get_map[i][2*j+1];
                 }
             }
             else
@@ -82,6 +83,7 @@ function get_from()
                 Complete_graph.place_list[i].in_use=false;
             }
         }
+        
     }).catch((error) => {
         console.log(error)
     });

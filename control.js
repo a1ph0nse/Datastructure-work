@@ -21,11 +21,16 @@ create_map.prototype.initialize = function(map)
     // 设置相关事件函数
     div.onclick = function()
     {
-        //也许可以整个输入框输入N
-        let N=2000;
-        let i,j;
+        //输入框在这里
+        var N=prompt("请输入图中点的个数N(0<N<=14400):");
+        if(N<=0||N>14400)
+        {
+            window.alert("输入的个数N的大小超出允许的范围！");
+            return;
+        }
         Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset,LENGTH);
         build_graph(N);
+        console.log(Complete_graph);
         Complete_graph.hide_all();
         //Complete_graph.show_all(); 
         Small_graph.init(lng_base-lng_offset*7.5,lat_base-lat_offset*7.5,lng_offset*15,lat_offset*15,BLOCK_LENGTH2);
@@ -33,6 +38,7 @@ create_map.prototype.initialize = function(map)
         Small_graph.hide_all();
         Big_graph.init(lng_base-lng_offset*15,lat_base-lat_offset*15,lng_offset*30,lat_offset*30,BLOCK_LENGTH1);
         build_Big_graph();
+        console.log(Big_graph);
         Big_graph.show_all();
         //创建图的控件可以隐藏，其他控件可以出现
         create_graph.hide();
@@ -247,24 +253,35 @@ send.prototype.initialize = function(map)
         //加一个输入文件名，转成string作为get_form的参数
 
         //先把图清掉
-        Complete_graph.place_list.splice(0,14400);
-        Small_graph.place_list.splice(0,64);
-        Big_graph.place_list.splice(0,16);
         map.clearOverlays();
+        Complete_graph.place_list=[];
+        
         Complete_graph.init(lng_base,lat_base,lng_offset,lat_offset,LENGTH);
-        Small_graph.init(lng_base-lng_offset*7.5,lat_base-lat_offset*7.5,lng_offset*15,lat_offset*15,BLOCK_LENGTH2);
-        Big_graph.init(lng_base-lng_offset*15,lat_base-lat_offset*15,lng_offset*30,lat_offset*30,BLOCK_LENGTH1);
         //请求得到图,并根据获取的图更新三个图
         get_from();
+        
+        Small_graph.place_list=[];
+        Small_graph.init(lng_base-lng_offset*7.5,lat_base-lat_offset*7.5,lng_offset*15,lat_offset*15,BLOCK_LENGTH2);
         build_Small_graph();
+
+        Big_graph.place_list=[];
+        Big_graph.init(lng_base-lng_offset*15,lat_base-lat_offset*15,lng_offset*30,lat_offset*30,BLOCK_LENGTH1);
         build_Big_graph();
+
+        console.log(Complete_graph);
+        console.log(Small_graph);
+        console.log(Big_graph);
+        
         Complete_graph.hide_all();
         Small_graph.hide_all();
         Big_graph.show_all();
-        traffic_show.show();
 
+        traffic_show.show();
+        Expansion.show();
+        Reduction.show();
         //调整缩放等级
         map.setZoom(8);
+        flag=0;
     }
     map.getContainer().appendChild(Get_Graph);
     return Get_Graph;

@@ -648,3 +648,30 @@ function change_graph_to_show(zoom_level)
             break;
     }    
 }
+
+//试着写一个把参数传过去的看看是不是this的问题
+function another_show(graph)
+{
+    var i,j;
+    for(i=0;i<graph.place_list.length;i++)
+    {
+        graph.place_list[i].marker.show();
+        for(j=0;j<graph.place_list[i].road_list.length;j++)
+        {
+            graph.place_list[i].road_list[j].line.show();
+        }
+    }
+}
+
+function another_hide(graph)
+{
+    var i,j;
+    for(i=0;i<graph.place_list.length;i++)
+    {
+        graph.place_list[i].marker.hide();
+        for(j=0;j<graph.place_list[i].road_list.length;j++)
+        {
+            graph.place_list[i].road_list[j].line.hide();
+        }
+    }
+}
