@@ -127,6 +127,7 @@ road_graph.prototype.initialize = function(map)
         flag=0;
         road_Graph.hide();
         traffic_show.show();
+        change_graph_to_show(map.getZoom()+1);
     }
     map.getContainer().appendChild(black_road);
     return black_road;
@@ -255,12 +256,33 @@ get_graph.prototype.initialize = function(map)
 
     Get_Graph.onclick = async function()
     {
-        //加一个输入文件名，转成string作为get_form的参数
-        var filename=prompt("请输入文件名:");
-        if(filename.length!=13)
+        //获取文件名的列表
+        var file_list = await get_file_list();
+        console.log(file_list);
+
+        //将文件名列表转化为输出显示的格式
+        var output_string='请输入要选择的文件名前面的序号:';
+        for(let i=0;i<file_list.length;i++)
         {
-            window.alert("输入文件名错误!");
+            output_string+='\n  ';
+            output_string+=(i+1).toString();
+            output_string+='.';
+            output_string+=file_list[i];
+        }
+
+        //输入文件名，转成string作为get_form的参数
+        var choice=prompt(output_string);
+        console.log(typeof(choice));
+        var filename='';
+        if(parseInt(choice)>file_list.length||parseInt(choice)<=0)
+        {
+            window.alert("输入的序号错误错误!");
             return;
+        }
+        else
+        {
+            filename=file_list[parseInt(choice)-1];
+            console.log(filename);
         }
         //先把图清掉
         Complete_graph.place_list.splice(0,14400);

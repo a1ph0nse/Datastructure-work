@@ -47,13 +47,30 @@ function send_to(graph)
     });
 }
 
+//获取文件名的列表
+//请求获取文件名并展示
+async function get_file_list()
+{
+    var file_list;
+    await axios({
+        method: 'GET',
+        url:"http://1.14.150.210:8080/road/file/list",
+    }).then((res) => {
+        //console.log(res.data.data.file_list);
+        file_list = res.data.data.file_list
+
+    }).catch((error) => {
+        console.log(error)
+    });
+    return file_list
+}
+
 
 //获取图的功能
 //从后端获取图的每一个Place的index和它的road的index(也许要包含road_num、sdistance)
 //并根据接收到的图的信息修改complete_graph、big_graph和small_graph
 async function get_from(filename)
 {
-    //var filename="1652176145759";
     var res = await axios({
         method: 'GET',
         url:"http://1.14.150.210:8080/road/file",

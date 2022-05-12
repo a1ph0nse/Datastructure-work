@@ -38,16 +38,16 @@
             //     console.log(error)
             // });
             
-            // axios({
-            //         method: 'GET',
-            //         url:"http://1.14.150.210:8080/road/file/list",
-            //     }).then((res) => {
-            //         console.log(res.data.data);
-            //         console.log(res.data.data.file_list[res.data.data.file_list.length-1]);
+            axios({
+                    method: 'GET',
+                    url:"http://1.14.150.210:8080/road/file/list",
+                }).then((res) => {
+                    console.log(res.data.data.file_list);
+                    console.log(typeof(res.data.data.file_list[0]));
 
-            //     }).catch((err) => {
-            //         console.log(error)
-            //     });
+                }).catch((err) => {
+                    console.log(error)
+                });
             
             // axios({
             //     method: 'GET',
@@ -61,12 +61,20 @@
             //     console.log(error)
             // });
             
-            var N=prompt("请输入图中点的个数N(0<N<=14400):");
-            if(1)
-            {
-                console.log(N.length);
+            // var N=prompt("请输入图中点的个数N(0<N<=14400):");
+            // if(1)
+            // {
+            //     console.log(N.length);
                 
-            }
+            // }
+
+
+        // var res = axios({
+        //     method: 'GET',
+        //     url:"http://1.14.150.210:8080/road/file/list",
+        // });
+        // console.log(res.data.data);
+
         </script>
     </body>
 

@@ -3,7 +3,7 @@ var central_point = new BMapGL.Point(113.429, 38.4275);
 //初始的缩放等级可以调整一下
 map.centerAndZoom(central_point, 8); 
 //滚轮放缩只是方便调试，最后要去掉
-map.enableScrollWheelZoom(true);
+//map.enableScrollWheelZoom(true);
 //以下4个值的内容均要调整
 var lng_offset=0.05;//lng（经度）上的offset
 var lat_offset=0.025//lat(纬度)上的offset
