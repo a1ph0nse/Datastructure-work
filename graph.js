@@ -458,38 +458,75 @@ function Traffic_graph()
             for(j=0;j<Complete_graph.place_list[i].road_list.length;j++)
             {
                 //随机生成通行时间,或许可以修改一下计算方法，虽然本质上都是纯随机
-                Complete_graph.place_list[i].road_list[j].time=randomcreator(3600,9001);
-                /*
-                如果可以请求的话把上面那句换了
-                */
-
-                if(Complete_graph.place_list[i].road_list[j].time>=TIME1&&Complete_graph.place_list[i].road_list[j].time<TIME2)//不拥堵
+                //现在试试调整一下
+                //首先规定路的容量v与其终点连接的路数有关和道路长度有关，time=c*distance*f(n/v) f(n/v)=1(n/v<=某数)或1+en/v(n/v>某数)
+                //设置路的容量v=road_num*distance,通行车辆数量的范围为[0,288]
+                //n/v >0.4即为较阻塞 >0.7即为阻塞
+                var v=Complete_graph.place_list[Complete_graph.place_list[i].road_list[j].index].road_list.length*10*Complete_graph.place_list[i].road_list[j].distance;
+                var n=randomcreator(0,289);
+                if(n/v<=0.4)
                 {
+                    //不拥堵
                     Complete_graph.place_list[i].road_list[j].line.setStrokeColor("green");
                     Complete_graph.place_list[i].road_list[j].line.show();
+                    Complete_graph.place_list[i].road_list[j].time=Complete_graph.place_list[i].road_list[j].distance*100;
                 }
                 else
                 {
-                    if(Complete_graph.place_list[i].road_list[j].time<TIME3&&Complete_graph.place_list[i].road_list[j].time>=TIME2)//有一点拥堵
+                    if(n/v<0.7)
                     {
+                        //比较拥堵
                         Complete_graph.place_list[i].road_list[j].line.setStrokeColor("yellow");
                         Complete_graph.place_list[i].road_list[j].line.show();
+                        Complete_graph.place_list[i].road_list[j].time=(Complete_graph.place_list[i].road_list[j].distance*100)*(1+0.5*n/v);
                     }
                     else
                     {
-                        if(Complete_graph.place_list[i].road_list[j].time>=TIME3)//拥堵
+                        //拥堵
+                        if(n/v<=1)
                         {
                             Complete_graph.place_list[i].road_list[j].line.setStrokeColor("red");
                             Complete_graph.place_list[i].road_list[j].line.show();
+                            Complete_graph.place_list[i].road_list[j].time=(Complete_graph.place_list[i].road_list[j].distance*100)*(1+(n/v));
                         }
-                        else//时间<=0，说明有问题
+                        else
                         {
-                            window.alert("时间生成的有问题");
-                            return;
-                        }
-                        
+                            Complete_graph.place_list[i].road_list[j].line.setStrokeColor("red");
+                            Complete_graph.place_list[i].road_list[j].line.show();
+                            Complete_graph.place_list[i].road_list[j].time=(Complete_graph.place_list[i].road_list[j].distance*100)*2;
+                        }    
                     }
                 }
+
+                Complete_graph.place_list[i].road_list[j].time=randomcreator(3600,9001);
+
+                // if(Complete_graph.place_list[i].road_list[j].time>=TIME1&&Complete_graph.place_list[i].road_list[j].time<TIME2)//不拥堵
+                // {
+                //     Complete_graph.place_list[i].road_list[j].line.setStrokeColor("green");
+                //     Complete_graph.place_list[i].road_list[j].line.show();
+                // }
+                // else
+                // {
+                //     if(Complete_graph.place_list[i].road_list[j].time<TIME3&&Complete_graph.place_list[i].road_list[j].time>=TIME2)//有一点拥堵
+                //     {
+                //         Complete_graph.place_list[i].road_list[j].line.setStrokeColor("yellow");
+                //         Complete_graph.place_list[i].road_list[j].line.show();
+                //     }
+                //     else
+                //     {
+                //         if(Complete_graph.place_list[i].road_list[j].time>=TIME3)//拥堵
+                //         {
+                //             Complete_graph.place_list[i].road_list[j].line.setStrokeColor("red");
+                //             Complete_graph.place_list[i].road_list[j].line.show();
+                //         }
+                //         else//时间<=0，说明有问题
+                //         {
+                //             window.alert("时间生成的有问题");
+                //             return;
+                //         }
+                        
+                //     }
+                // }
             }
         }
         else
@@ -654,31 +691,4 @@ function change_graph_to_show(zoom_level)
             window.alert("缩放等级出现了问题！")
             break;
     }    
-}
-
-//试着写一个把参数传过去的看看是不是this的问题
-function another_show(graph)
-{
-    var i,j;
-    for(i=0;i<graph.place_list.length;i++)
-    {
-        graph.place_list[i].marker.show();
-        for(j=0;j<graph.place_list[i].road_list.length;j++)
-        {
-            graph.place_list[i].road_list[j].line.show();
-        }
-    }
-}
-
-function another_hide(graph)
-{
-    var i,j;
-    for(i=0;i<graph.place_list.length;i++)
-    {
-        graph.place_list[i].marker.hide();
-        for(j=0;j<graph.place_list[i].road_list.length;j++)
-        {
-            graph.place_list[i].road_list[j].line.hide();
-        }
-    }
 }

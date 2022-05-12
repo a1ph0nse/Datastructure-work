@@ -59,18 +59,6 @@ create_map.prototype.initialize = function(map)
 var create_graph = new create_map(20,20);
 map.addControl(create_graph);
 
-//搜索函数,输入坐标后显示周围100个点和边,用于测试显示
-function search()
-{    
-    //var x=document.getElementById("x");//输入的x坐标
-    //var y=document.getElementById("y");//输入的y坐标
-    //map.clearOverlays();//清除所有覆盖物
-    map.flyTo(Complete_graph.place_list[12].point,13);//跳转到中心点处，并设置缩放等级
-    //map_show(x,y);//调用函数显示
-
-    //window.alert("x坐标是:"+x.value+" y坐标是:"+y.value)
-    
-}
 
 //显示路况图的控件,之后说不定还要补充一个恢复颜色的控件
 function traffic_graph(x_offset, y_offset)
@@ -82,7 +70,7 @@ traffic_graph.prototype = new BMapGL.Control();
 traffic_graph.prototype.initialize = function(map) 
 {
     var traffic = document.createElement('traffic');
-    traffic.appendChild(document.createTextNode('恢复地图数据'));
+    traffic.appendChild(document.createTextNode('模拟车流'));
     traffic.style.cursor = "pointer";
     traffic.style.padding = "7px 10px";
     traffic.style.boxShadow = "0 2px 6px 0 rgba(27, 142, 236, 0.5)";
@@ -125,14 +113,14 @@ road_graph.prototype.initialize = function(map)
         //恢复颜色的函数
         Complete_graph.default_color();
         flag=0;
-        road_Graph.hide();
+        //road_Graph.hide();
         traffic_show.show();
         change_graph_to_show(map.getZoom()+1);
     }
     map.getContainer().appendChild(black_road);
     return black_road;
 }
-var road_Graph = new road_graph(20,20);
+var road_Graph = new road_graph(20,60);
 map.addControl(road_Graph);
 road_Graph.hide();
 
