@@ -308,90 +308,6 @@ function build_graph(N)
                         }
                     }
                     break;
-                // case 4://西北
-                //     //检测是否超出范围，超出了范围就算了
-                //     if(index2x(key)>0&&index2y(key)>0)
-                //     {                  
-                //         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                //         if(!Complete_graph.place_list[key].in_road(key,key-LENGTH-1)&&(!Complete_graph.place_list[key-LENGTH-1].in_road(key)))
-                //         {   //路是双向的
-                //             Complete_graph.place_list[key].add_road(new Road(key-LENGTH-1),Complete_graph);
-                //             Complete_graph.place_list[key-LENGTH-1].add_road(new Road(key),Complete_graph);                          
-                //         }
-                //         next_key = key-LENGTH-1;//设置next_key
-                //         //还要判断是否已经纳入要显示的点，未纳入则纳入
-                //         if(!Complete_graph.place_list[key-LENGTH-1].in_use)
-                //         {
-                //             total_point++;
-                //             Complete_graph.place_list[key-LENGTH-1].in_use=true;
-                //             map.addOverlay(Complete_graph.place_list[key-LENGTH-1].marker);
-                //             Complete_graph.place_list[key-LENGTH-1].marker.hide();
-                //         }
-                //     }
-                //     break;
-                // case 5://东北
-                //     //检测是否超出范围，超出了范围就算了
-                //     if(index2x(key)<LENGTH-1&&index2y(key)>0)
-                //     {                  
-                //         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                //         if(!Complete_graph.place_list[key].in_road(key,key-LENGTH+1)&&(!Complete_graph.place_list[key-LENGTH+1].in_road(key)))
-                //         {   //路是双向的
-                //             Complete_graph.place_list[key].add_road(new Road(key-LENGTH+1),Complete_graph);
-                //             Complete_graph.place_list[key-LENGTH+1].add_road(new Road(key),Complete_graph);                          
-                //         }
-                //         next_key = key-LENGTH+1;//设置next_key
-                //         //还要判断是否已经纳入要显示的点，未纳入则纳入
-                //         if(!Complete_graph.place_list[key-LENGTH+1].in_use)
-                //         {
-                //             total_point++;
-                //             Complete_graph.place_list[key-LENGTH+1].in_use=true;
-                //             map.addOverlay(Complete_graph.place_list[key-LENGTH+1].marker);
-                //             Complete_graph.place_list[key-LENGTH+1].marker.hide();
-                //         }
-                //     }
-                //     break;
-                // case 6://西南
-                //     //检测是否超出范围，超出了范围就算了
-                //     if(index2x(key)>0&&index2y(key)<LENGTH-1)
-                //     {                  
-                //         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                //         if(!Complete_graph.place_list[key].in_road(key,key+LENGTH-1)&&(!Complete_graph.place_list[key+LENGTH-1].in_road(key)))
-                //         {   //路是双向的
-                //             Complete_graph.place_list[key].add_road(new Road(key+LENGTH-1),Complete_graph);
-                //             Complete_graph.place_list[key+LENGTH-1].add_road(new Road(key),Complete_graph);                          
-                //         }
-                //         next_key = key+LENGTH-1;//设置next_key
-                //         //还要判断是否已经纳入要显示的点，未纳入则纳入
-                //         if(!Complete_graph.place_list[key+LENGTH-1].in_use)
-                //         {
-                //             total_point++;
-                //             Complete_graph.place_list[key+LENGTH-1].in_use=true;
-                //             map.addOverlay(Complete_graph.place_list[key+LENGTH-1].marker);
-                //             Complete_graph.place_list[key+LENGTH-1].marker.hide();
-                //         }
-                //     }
-                //     break;
-                // case 7://东南
-                //     //检测是否超出范围，超出了范围就算了
-                //     if(index2x(key)<LENGTH-1&&index2y(key)<LENGTH-1)
-                //     {                  
-                //         //判断是否已经在road_list之中,不在则连一条边，否则就算了
-                //         if(!Complete_graph.place_list[key].in_road(key,key+LENGTH+1)&&(!Complete_graph.place_list[key+LENGTH+1].in_road(key)))
-                //         {   //路是双向的
-                //             Complete_graph.place_list[key].add_road(new Road(key+LENGTH+1),Complete_graph);
-                //             Complete_graph.place_list[key+LENGTH+1].add_road(new Road(key),Complete_graph);                          
-                //         }
-                //         next_key = key+LENGTH+1;//设置next_key
-                //         //还要判断是否已经纳入要显示的点，未纳入则纳入
-                //         if(!Complete_graph.place_list[key+LENGTH+1].in_use)
-                //         {
-                //             total_point++;
-                //             Complete_graph.place_list[key+LENGTH+1].in_use=true;
-                //             map.addOverlay(Complete_graph.place_list[key+LENGTH+1].marker);
-                //             Complete_graph.place_list[key+LENGTH+1].marker.hide();
-                //         }
-                //     }
-                //     break;
             }
         }
         //从连边上找到一个点作为新的key,最后一次连边的点作为新的key
@@ -400,47 +316,6 @@ function build_graph(N)
 }
 
 
-
-
-//地图的显示(BFS周围100个点以及相关联的边)
-//待测试
-function map_show(x,y)
-{
-    source=xy2index(x,y,LENGTH);
-    let queue = [];//先整个queue
-    let list = [];//存放要显示的点
-    let i,j;
-    while(queue.length!=0||list.length<100)
-    {
-        //初始将起始节点加入显示列表list
-        if(list.length==0)
-        {
-            queue.push(source);//push入队
-            list.push(source);//加入显示列表
-            Complete_graph.place_list[list[i]].marker.show();//显示标记点marker
-        }
-        //将与当前节点相邻，且不list中的节点push入queue
-        for(i=0;i<Complete_graph.place_list[queue[0]].road_list.length;i++)
-        {
-            if(!Complete_graph.place_list[queue[0]].road_list.includes(list[j]))
-            {
-                queue.push(Complete_graph.place_list[queue[0]].road_list[i].index);//push入队
-                list.push(Complete_graph.place_list[queue[0]].road_list[i].index);//加入显示列表
-                map.addoverlay(Complete_graph.place_list[list[i]].marker);//添加标记点marker
-                Complete_graph.place_list[list[i]].show_road(Complete_graph.place_list[queue[0]].road_list[i].index);//把这条路显示出来
-            }
-            else
-                continue;
-        }
-        //移除位于队首的节点        
-        queue.shift();
-    }
-
-}
-
-
-//TIME1,TIME2,TIME3用于区分拥堵情况，不拥堵为绿色，有点拥堵为黄色，拥堵为红色
-const TIME1=3600,TIME2=5400,TIME3=7200;
 //路况图
 //麻了，为什么这么多种红黄绿
 function Traffic_graph()
@@ -497,36 +372,6 @@ function Traffic_graph()
                         }    
                     }
                 }
-
-                Complete_graph.place_list[i].road_list[j].time=randomcreator(3600,9001);
-
-                // if(Complete_graph.place_list[i].road_list[j].time>=TIME1&&Complete_graph.place_list[i].road_list[j].time<TIME2)//不拥堵
-                // {
-                //     Complete_graph.place_list[i].road_list[j].line.setStrokeColor("green");
-                //     Complete_graph.place_list[i].road_list[j].line.show();
-                // }
-                // else
-                // {
-                //     if(Complete_graph.place_list[i].road_list[j].time<TIME3&&Complete_graph.place_list[i].road_list[j].time>=TIME2)//有一点拥堵
-                //     {
-                //         Complete_graph.place_list[i].road_list[j].line.setStrokeColor("yellow");
-                //         Complete_graph.place_list[i].road_list[j].line.show();
-                //     }
-                //     else
-                //     {
-                //         if(Complete_graph.place_list[i].road_list[j].time>=TIME3)//拥堵
-                //         {
-                //             Complete_graph.place_list[i].road_list[j].line.setStrokeColor("red");
-                //             Complete_graph.place_list[i].road_list[j].line.show();
-                //         }
-                //         else//时间<=0，说明有问题
-                //         {
-                //             window.alert("时间生成的有问题");
-                //             return;
-                //         }
-                        
-                //     }
-                // }
             }
         }
         else
