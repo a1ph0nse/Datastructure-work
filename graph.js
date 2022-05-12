@@ -115,6 +115,7 @@ function Graph()
             {
                 for(j=0;j<this.place_list[i].road_list.length;j++)
                 {
+                    this.place_list[i].marker.show();//因为到时候返回的时候，那些点会隐藏，所以在加一个显示（即使是覆盖了前面的也没所谓，速度不会慢）
                     this.place_list[i].road_list[j].line.setStrokeColor("black");
                     this.place_list[i].road_list[j].line.show();
                 }
@@ -153,16 +154,6 @@ function Graph()
                 }
             }
         }
-    }
-    //最短路径
-    this.shortest_path=function(source,destination)
-    {
-
-    }
-    //最短时间
-    this.shortest_time=function(source,destination)
-    {
-
     }
 }
 

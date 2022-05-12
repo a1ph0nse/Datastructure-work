@@ -18,7 +18,11 @@
         <div id="searcher">
             第一个点的index:<input id="x" type="text" style="width:100px; margin:10px;"/>
             第二个点的index:<input id="y" type="text" style="width:100px; margin:10px;"/>
-            <!-- <button id="search" onclick="search()">搜索</button> -->
+            <button id="road" onclick="show_shorest()">显示最短路径</button>
+            <button id="hundred" onclick="show_hundred()">显示100个点</button>
+            <br>
+            选择时间1/路程2作为计算单位:<input id="choice" type="text" style="width:100px; margin:10px;"/>
+            <button id="choose" onclick="choose()">确认选择</button>
             
         </div>
         <script language="javascript" type="text/javascript" src="graph.js"></script>
