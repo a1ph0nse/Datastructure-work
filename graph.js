@@ -81,8 +81,7 @@ function Road(idx)
 {
     this.index=idx;//地点编号
     this.distance=randomcreator(1,10);//路长随机生成
-    //this.distance=60;//如果后端弄不到的话，单位为km
-    this.time;//通行时间
+    this.time=100*this.distance;//通行时间,初始时随机一下
     this.line;//路的连线
     this.get_length=function(){}//获取路长
     this.get_time=function(){}//获取通行时间
