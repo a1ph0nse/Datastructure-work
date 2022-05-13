@@ -46,7 +46,7 @@ create_map.prototype.initialize = function(map)
         Big_graph.show_all();
         //创建图的控件可以隐藏，其他控件可以出现
         create_graph.hide();
-        traffic_show.show();
+        //traffic_show.show();
         Expansion.show();
         Reduction.show();
         Send_graph.show();

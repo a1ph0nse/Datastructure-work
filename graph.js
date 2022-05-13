@@ -381,6 +381,66 @@ function Traffic_graph()
     }
 }
 
+//这里是老版的路况
+// //TIME1,TIME2,TIME3用于区分拥堵情况，不拥堵为绿色，有点拥堵为黄色，拥堵为红色
+// const TIME1=3600,TIME2=5400,TIME3=7200;
+// //路况图
+// //麻了，为什么这么多种红黄绿
+// function Traffic_graph()
+// {
+//     Big_graph.hide_all();
+//     Small_graph.hide_all();
+//     map.setZoom(12);
+//     let i = 0;
+//     let j = 0;
+//     for(i=0;i<TOTAL;i++)
+//     {
+//         if(Complete_graph.place_list[i].in_use)
+//         {
+//             Complete_graph.place_list[i].marker.show();
+//             for(j=0;j<Complete_graph.place_list[i].road_list.length;j++)
+//             {
+//                 //随机生成通行时间,或许可以修改一下计算方法，虽然本质上都是纯随机
+//                 Complete_graph.place_list[i].road_list[j].time=randomcreator(3600,9001);
+//                 /*
+//                 如果可以请求的话把上面那句换了
+//                 */
+
+//                 if(Complete_graph.place_list[i].road_list[j].time>=TIME1&&Complete_graph.place_list[i].road_list[j].time<TIME2)//不拥堵
+//                 {
+//                     Complete_graph.place_list[i].road_list[j].line.setStrokeColor("green");
+//                     Complete_graph.place_list[i].road_list[j].line.show();
+//                 }
+//                 else
+//                 {
+//                     if(Complete_graph.place_list[i].road_list[j].time<TIME3&&Complete_graph.place_list[i].road_list[j].time>=TIME2)//有一点拥堵
+//                     {
+//                         Complete_graph.place_list[i].road_list[j].line.setStrokeColor("yellow");
+//                         Complete_graph.place_list[i].road_list[j].line.show();
+//                     }
+//                     else
+//                     {
+//                         if(Complete_graph.place_list[i].road_list[j].time>=TIME3)//拥堵
+//                         {
+//                             Complete_graph.place_list[i].road_list[j].line.setStrokeColor("red");
+//                             Complete_graph.place_list[i].road_list[j].line.show();
+//                         }
+//                         else//时间<=0，说明有问题
+//                         {
+//                             window.alert("时间生成的有问题");
+//                             return;
+//                         }
+                        
+//                     }
+//                 }
+//             }
+//         }
+//         else
+//         {
+//             continue;
+//         }
+//     }
+// }
 
 
 //对big_representative_list(30*30的区域)进行处理
@@ -498,38 +558,45 @@ function change_graph_to_show(zoom_level)
             Complete_graph.hide_all();
             Small_graph.hide_all();
             Big_graph.show_all();
+            traffic_show.hide();
             break;
         case 9:
             Complete_graph.hide_all();
             Small_graph.hide_all();
             Big_graph.show_all();
+            traffic_show.hide();
             break;
         //10,11级仅显示区域内的代表点，区域为15*15
         case 10:
             Complete_graph.hide_all();
             Big_graph.hide_all();
-            Small_graph.show_all();          
+            Small_graph.show_all();
+            traffic_show.hide();          
             break;
         case 11:
             Complete_graph.hide_all();
             Big_graph.hide_all();
-            Small_graph.show_all();  
+            Small_graph.show_all();
+            traffic_show.hide();  
             break;
         //12，13，14级显示所有的点
         case 12:
             Big_graph.hide_all();
             Small_graph.hide_all();  
             Complete_graph.show_all();
+            traffic_show.show();
             break;
         case 13:
             Big_graph.hide_all();
             Small_graph.hide_all();  
             Complete_graph.show_all();
+            traffic_show.show();
             break;
         case 14:
             Big_graph.hide_all();
             Small_graph.hide_all();  
             Complete_graph.show_all();
+            traffic_show.show();
             break;
         //除此之外就是有问题的
         default:
