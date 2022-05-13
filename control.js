@@ -88,7 +88,7 @@ traffic_graph.prototype.initialize = function(map)
     map.getContainer().appendChild(traffic);
     return traffic;
 }
-var traffic_show = new traffic_graph(20,20);
+var traffic_show = new traffic_graph(20,60);
 map.addControl(traffic_show);
 traffic_show.hide();
 
@@ -120,7 +120,7 @@ road_graph.prototype.initialize = function(map)
     map.getContainer().appendChild(black_road);
     return black_road;
 }
-var road_Graph = new road_graph(20,60);
+var road_Graph = new road_graph(20,100);
 map.addControl(road_Graph);
 road_Graph.hide();
 
@@ -290,7 +290,7 @@ get_graph.prototype.initialize = function(map)
         Complete_graph.hide_all();
         Small_graph.hide_all();
         Big_graph.show_all();
-        traffic_show.show();
+        //traffic_show.show();
         Expansion.show();
         Reduction.show();
         //调整缩放等级
@@ -410,6 +410,7 @@ function show_hundred()//发送请求，获得数据
             }).then((res)=>{get_out_hundred(res.data.data.road_list)})
         
         }
+        road_Graph.show();
     }
 }
 
@@ -501,8 +502,8 @@ function show_shorest()
                 end:ending
             }).then((res)=>{get_out_road(res.data.data.road_list)})
         }
-    }
-    
+        road_Graph.show();
+    } 
 }
 function judge(x){
     if(Number(x).toString() == "NaN")
